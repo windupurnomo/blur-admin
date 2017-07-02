@@ -9,7 +9,7 @@
     .run(themeRun);
 
   /** @ngInject */
-  function themeRun($timeout, $rootScope, layoutPaths, preloader, $q, baSidebarService, themeLayoutSettings) {
+  function themeRun($timeout, $rootScope, $state, $localStorage, layoutPaths, preloader, $q, baSidebarService, themeLayoutSettings) {
     var whatToWait = [
       preloader.loadAmCharts(),
       $timeout(3000)
@@ -33,7 +33,18 @@
       if (!$rootScope.$pageFinishedLoading) {
         $rootScope.$pageFinishedLoading = true;
       }
-    }, 7000);
+    }, 2000);
+
+    $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+      var fullpages = ['login', 'register', 'forgotpassword'];
+      var isFullPage = fullpages.indexOf(to.name) > -1;
+      $rootScope.$baSidebarService.setVisible(!isFullPage);
+      console.log($localStorage.token);
+      if (!isFullPage && $localStorage.token === undefined){
+        //cek token
+        $state.go('login');
+      }
+    });
 
     $rootScope.$baSidebarService = baSidebarService;
   }

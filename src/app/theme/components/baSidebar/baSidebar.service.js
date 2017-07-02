@@ -18,6 +18,7 @@
 
       function _factory() {
         var isMenuCollapsed = shouldMenuBeCollapsed();
+        var isVisible = true;
 
         this.getMenuItems = function() {
           var states = defineMenuItemStates();
@@ -44,6 +45,15 @@
 
         this.isMenuCollapsed = function() {
           return isMenuCollapsed;
+        };
+
+        this.setVisible = function(a) {
+          isVisible = a;
+          isMenuCollapsed = !a;
+        };
+
+        this.isVisible = function() {
+          return isVisible;
         };
 
         this.toggleMenuCollapsed = function() {
