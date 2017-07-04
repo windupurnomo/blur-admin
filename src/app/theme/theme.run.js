@@ -36,10 +36,10 @@
     }, 2000);
 
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-      var fullpages = ['login', 'register', 'forgotpassword'];
+      var fullpages = ['login', 'register', 'verification', 'forgotpassword'];
       var isFullPage = fullpages.indexOf(to.name) > -1;
       $rootScope.$baSidebarService.setVisible(!isFullPage);
-      console.log($localStorage.token);
+      // console.log($localStorage.token);
       if (!isFullPage && $localStorage.token === undefined){
         //cek token
         $state.go('login');

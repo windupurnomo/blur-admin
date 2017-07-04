@@ -23,6 +23,12 @@
           templateUrl: 'app/pages/auth/register.html',
           controller: 'RegisterPageCtrl',
         })
+        .state('verification', {
+          url: '/verification',
+          title: 'Verification',
+          templateUrl: 'app/pages/auth/verification.html',
+          controller: 'VerificationPageCtrl',
+        })
     ;
   }
 

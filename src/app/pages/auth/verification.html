@@ -3,20 +3,20 @@
     <div class="col-md-6 col-md-offset-3">
       <div
           ba-panel
-          ba-panel-title="Login"
+          ba-panel-title="Account Verification"
           ba-panel-class="with-scroll">
-              <form ng-submit="login()">
+              <form ng-submit="verify()">
                 <div class="form-group">
-                  <label for="username">Email</label>
+                  <label for="username">Username</label>
                   <input type="text" class="form-control" id="username" placeholder="Username" ng-model="form.username">
                 </div>
                 <div class="form-group">
-                  <label for="pass">Password</label>
-                  <input type="password" class="form-control" id="pass" placeholder="Password" ng-model="form.password">
+                  <label for="code">Code</label>
+                  <input type="text" class="form-control" id="code" placeholder="Verification Code" ng-model="form.code">
                 </div>
+                <div class="form-group">
                 <button type="submit" class="btn btn-danger">Submit</button>
-                <a href="" ui-sref="register">tidak punya akun</a> | 
-                <a href="" ui-sref="forgotpassword">lupa password</a>
+                <a href="" ui-sref="login">sudah punya akun</a>
               </form>
       </div>
     </div>
