@@ -16,6 +16,7 @@
     'BlurAdmin.pages.maps',
     'BlurAdmin.pages.profile',
     'BlurAdmin.pages.auth',
+    'BlurAdmin.pages.setting',
   ])
       .config(routeConfig);
 

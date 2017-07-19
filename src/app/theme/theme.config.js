@@ -9,7 +9,7 @@
     .config(config);
 
   /** @ngInject */
-  function config(baConfigProvider, colorHelper, $provide) {
+  function config(baConfigProvider, colorHelper, $provide, $httpProvider) {
     $provide.decorator('$uiViewScroll', uiViewScrollDecorator);
     //baConfigProvider.changeTheme({blur: true});
     //
@@ -20,6 +20,30 @@
     //    white: '#ffffff',
     //  },
     //});
+
+    $httpProvider.interceptors.push(function($q, $location, $localStorage) {
+      return {
+        'request': function(config) {
+            config.headers = config.headers || {};
+            var token = $localStorage.token;
+            if (token) {
+                config.headers.Authorization = token;
+            }
+            return config;
+        },
+        'responseError': function(response) {
+            console.log(response);
+            if (response.status === 401 || response.status === 403) {
+                $rootScope.$emit('loginRequired');
+            } else if (response.status === 500 && response.data !== null &&
+                response.data.statusMessage &&
+                response.data.statusMessage.indexOf("Session token authentication failure") > -1) {
+                $rootScope.$emit('loginRequired');
+            }
+            return $q.reject(response);
+        }
+      };
+    });
   }
 
   /** @ngInject */

@@ -1,0 +1,27 @@
+<div class="widgets">
+	<div ba-panel ba-panel-title="Daftar Pegawai" ba-panel-class="with-scroll table-panel">
+		<div class="add-row-editable-table">
+			<button class="btn btn-primary" ng-click="addEmployee()"><i class="ion-plus-round"></i> Tambah Pegawai</button>
+		</div>
+	  	<div class="horizontal-scroll">
+	  	  <table class="table table-hover">
+	  	    <thead>
+	  	    <tr class="black-muted-bg">
+				<th>Username</th>
+				<th>Email</th>
+				<th>Nama</th>
+				<th>Jabatan</th>
+	  	    </tr>
+	  	    </thead>
+	  	    <tbody>
+	  	    <tr ng-repeat="emp in employees" class="no-top-border">
+				<td>{{emp.username}}</td>
+				<td>{{emp.email}}</td>
+				<td>{{emp.name}}</td>
+				<td>{{emp.role}}</td>
+	  	    </tr>
+	  	    </tbody>
+	  	  </table>
+	  	</div>
+	</div>
+</div>

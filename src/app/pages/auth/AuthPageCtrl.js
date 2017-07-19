@@ -31,43 +31,11 @@
   }
 
   /** @ngInject */
-  function RegisterPageCtrl($scope, $state, cognito) {
+  function RegisterPageCtrl($scope, $state, aws) {
     $scope.form = {};
     $scope.register = function (){
-      
-      var attributeList = [];
-
-      var dataEmail = {
-          Name : 'email',
-          Value : $scope.form.email
-      };
-
-      var dataName = {
-          Name : 'name',
-          Value : $scope.form.name
-      };
-
-      var dataRole = {
-          Name : 'custom:role',
-          Value : '10'
-      };
-
-      var dataTenant = {
-          Name : 'custom:tenant',
-          Value : uuidv4()
-      };
-
-      var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail);
-      var attributeName = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataName);
-      var attributeRole = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataRole);
-      var attributeTenant = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataTenant);
-
-      attributeList.push(attributeEmail);
-      attributeList.push(attributeName);
-      attributeList.push(attributeRole);
-      attributeList.push(attributeTenant);
-
-      getUserPool(cognito).signUp($scope.form.username, $scope.form.password, attributeList, null, function(err, result){
+      aws.signup($scope.form.email, $scope.form.name, '10', uuidv4(), 
+        $scope.form.username, $scope.form.password, function(err, result){
           if (err) {
             log(err);
             alert(err);
@@ -79,12 +47,12 @@
     }
   }
 
-  function VerificationPageCtrl ($scope, $state, cognito){
+  function VerificationPageCtrl ($scope, $state, aws){
     $scope.form = {};
     $scope.verify = function (){
       var userData = {
           Username : $scope.form.username,
-          Pool : getUserPool(cognito)
+          Pool : aws.userPool
       };
 
       var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
@@ -99,12 +67,9 @@
     }
   }
 
-  function LoginPageCtrl($scope, $rootScope, $state, $localStorage, cognito) {
+  function LoginPageCtrl($scope, $rootScope, $state, $localStorage, aws, cognito) {
     $scope.form = {};
   	$scope.login = function (){
-  		// $localStorage.token = "lalala";
-  		// $state.go('dashboard');
-
       var authenticationData = {
           Username : $scope.form.username,
           Password : $scope.form.password,
@@ -113,12 +78,11 @@
       
       var userData = {
           Username : $scope.form.username,
-          Pool : getUserPool(cognito)
+          Pool : aws.userPool
       };
       var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
       cognitoUser.authenticateUser(authenticationDetails, {
           onSuccess: function (result) {
-              log('access token + ' + result.getAccessToken().getJwtToken());
               var xxx = 'cognito-idp.' + cognito.region + '.amazonaws.com/' + cognito.poolId;
               //POTENTIAL: Region needs to be set if not already set previously elsewhere.
               // AWS.config.region = cognito.region;
@@ -129,10 +93,19 @@
               //         xxx : result.getIdToken().getJwtToken()
               //     }
               // });
+              cognitoUser.getUserAttributes(function(err, result) {
+                  if (err) {
+                      alert(err);
+                      return;
+                  }
+                  var user = {};
+                  for (var i = 0; i < result.length; i++) {
+                      user[result[i].getName()] = result[i].getValue();
+                  }
+                  $localStorage.user = user;
+              });
               $localStorage.token = result.getIdToken().getJwtToken();
               $state.go('dashboard');
-              // Instantiate aws sdk service objects now that the credentials have been updated.
-              // example: var s3 = new AWS.S3();
 
           },
 

@@ -9,9 +9,10 @@
       .controller('PageTopCtrl', pageTopCtrl);
 
   /** @ngInject */
-  function pageTopCtrl($scope, $state, $localStorage) {
+  function pageTopCtrl($scope, $state, $window) {
     $scope.signout = function (){
-      delete $localStorage.token;
+      // delete $localStorage.token;
+      $window.localStorage.clear();
       $state.go('login');
     }
   }
